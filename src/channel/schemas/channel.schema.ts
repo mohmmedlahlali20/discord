@@ -14,8 +14,8 @@ export class Channel {
 
   @Prop({
     required: true,
-    enum: ["public", "private", "conversation"],
-    default: "conversation",
+    enum: ["public", "private"],
+    default: "private",
   })
   type: string;
 
