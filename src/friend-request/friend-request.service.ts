@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Conversation } from 'src/conversation/schema/conversation.schema';
 import { Message } from 'src/message/schema/message.schema';
 import { User } from 'src/user/schema/user.schema';
+import { MessagesDto } from 'src/message/dto/message.dto';
 
 @Injectable()
 export class FriendRequestService {
@@ -27,8 +28,7 @@ export class FriendRequestService {
 
         const existingFriendRequest = ({
             sender,
-            reciever,
-            status: 'Pending'
+            reciever
         })
 
         if(!existingFriendRequest){
@@ -37,27 +37,33 @@ export class FriendRequestService {
 
         const friendRequest = new this.friendRequestModel({
             sender,
-            reciever,
-            status: 'Pending'
+            reciever
         })
 
        await friendRequest.save()
 
-       const conversation = new this.conversationModel({
-        participants: [FriendRequestDto],
-        type: 'private', 
-    });
-
-    await conversation.save();
-
-    
-    const message = new this.messageModel({
-        conversation: conversation._id,
-        sender: senderId,
-        text: 'Hello, I would like to be friends!',
-    });
-
-    await conversation.save();
+       
         return friendRequest;
     }
+
+    async acceptRequest(requestId: string, FriendRequestDto ): Promise<FriendRequest> {
+     
+        
+        const updatedRequest = await this.friendRequestModel.findByIdAndUpdate(
+            requestId,
+            { status: 'Accepted' },
+            { new: true } 
+        );
+
+        const conversation = new this.conversationModel({
+            participants: [FriendRequestDto],
+            type: 'private', 
+        });
+    
+        await conversation.save();
+    
+        await updatedRequest.save();
+        return updatedRequest;
+        return  ;
+      }
 }
