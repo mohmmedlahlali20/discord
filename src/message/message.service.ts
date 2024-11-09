@@ -30,4 +30,16 @@ export class MessageService {
 
     return newMessage.save();
   }
+
+  async getMessageByChannelId(channelId: string): Promise<Message[]> {
+    const channel = await this.channelModel.findById(channelId).exec();
+    if (!channel) {
+      throw new NotFoundException(`Channel with ID ${channelId} not found`);
+    }
+
+    return this.messageModel
+      .find({ channel: channelId })
+      .populate('sender' , 'channel')
+      .exec();
+  }
 }
