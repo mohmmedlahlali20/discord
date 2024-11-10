@@ -6,6 +6,7 @@ import { Conversation } from 'src/conversation/schema/conversation.schema';
 import { Message } from 'src/message/schema/message.schema';
 import { User } from 'src/user/schema/user.schema';
 import { MessagesDto } from 'src/message/dto/message.dto';
+import { FriendRequestDto } from './dto/friend-request.dto';
 
 @Injectable()
 export class FriendRequestService {
@@ -46,7 +47,7 @@ export class FriendRequestService {
         return friendRequest;
     }
 
-    async acceptRequest(requestId: string, FriendRequestDto ): Promise<FriendRequest> {
+    async acceptRequest(requestId: string,  friendRequestDto: FriendRequestDto ): Promise<FriendRequest> {
      
         
         const updatedRequest = await this.friendRequestModel.findByIdAndUpdate(
@@ -56,14 +57,18 @@ export class FriendRequestService {
         );
 
         const conversation = new this.conversationModel({
-            participants: [FriendRequestDto],
+            participants: [friendRequestDto.sender, friendRequestDto.receiver],
             type: 'private', 
         });
     
         await conversation.save();
+        const populatedConversation = await this.conversationModel
+        .findById(conversation._id)
+        .populate('participants')
+        .exec();
     
         await updatedRequest.save();
-        return updatedRequest;
-        return  ;
+        return updatedRequest
+        
       }
 }

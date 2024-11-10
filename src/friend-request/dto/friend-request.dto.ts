@@ -8,7 +8,7 @@ export class FriendRequestDto{
 
     
     @IsString()
-    reciever: string;
+    receiver: string;
 
     
 }

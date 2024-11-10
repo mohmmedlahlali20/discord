@@ -1,24 +1,14 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 import { User } from "src/user/schema/user.schema";
 
+@Schema({ timestamps: true })
+export class Conversation extends Document {
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], required: true })
+  participants: Types.ObjectId[];
 
-    
-
-@Schema({
-    timestamps: true,
-})
-
-
-export class Conversation{
-    @Prop({type: [Types.ObjectId], ref: User.name, required:true})
-    Participants: Types.ObjectId[];
-
-    
-
-    @Prop()
-    visibility: string
-
+  @Prop({ default: 'private' })
+  type: string;
 }
 
-export const ConversationSchema = SchemaFactory.createForClass(Conversation)
+export const ConversationSchema = SchemaFactory.createForClass(Conversation);
