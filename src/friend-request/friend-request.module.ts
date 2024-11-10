@@ -6,6 +6,7 @@ import { Conversation, ConversationSchema } from 'src/conversation/schema/conver
 import { Message, MessageSchema } from 'src/message/schema/message.schema';
 import { User, UserSchema } from 'src/user/schema/user.schema';
 import { FriendRequest, FriendRequestSchema } from './schema/firend-request.schema';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FriendRequest, FriendRequestSchema } from './schema/firend-request.sche
       { name: Conversation.name, schema: ConversationSchema },
       { name: Message.name, schema: MessageSchema },
     ]),
+    NotificationModule
   ],
   controllers: [FriendRequestController],
   providers: [FriendRequestService]
