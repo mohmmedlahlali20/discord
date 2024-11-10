@@ -12,13 +12,13 @@ export enum Status{
 })
 export class FriendRequest{
 
-    @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
+    @Prop({  type: Types.ObjectId, ref: 'User' })
     sender: Types.ObjectId;   
 
-    @Prop({required: true, type: Types.ObjectId, ref: 'User'})
+    @Prop({ type: Types.ObjectId, ref: 'User'})
     reciever: Types.ObjectId;
 
-    @Prop({ default: 'pending' })
+    @Prop({ default: 'Pending' })
     status: Status;  
 
 }
