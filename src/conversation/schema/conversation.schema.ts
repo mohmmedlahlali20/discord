@@ -1,28 +1,17 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 import { User } from "src/user/schema/user.schema";
 
-export enum Visibility{
-    Private= 'Private',
-    Public= 'Public',
-    GroupChat= 'GroupChatPublic'
-    
-}
-@Schema({
-    timestamps: true,
-})
+@Schema({ timestamps: true })
+export class Conversation extends Document {
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], required: true })
+  participants: Types.ObjectId[];
 
+  // @Prop({ type: Types.ObjectId, ref: 'Message' })
+  // latestMessage: Types.ObjectId;
 
-export class Conversation{
-    @Prop({type: [Types.ObjectId], ref: User.name, required:true})
-    Participants: Types.ObjectId[];
-
-    @Prop({ type: [{ type: Types.ObjectId, ref: 'Message' }] })  
-    messages: Types.ObjectId[];
-
-    @Prop()
-    visibility: Visibility
-
+  @Prop({ default: 'private' })
+  type: string;
 }
 
-export const ConversationSchema = SchemaFactory.createForClass(Conversation)
+export const ConversationSchema = SchemaFactory.createForClass(Conversation);

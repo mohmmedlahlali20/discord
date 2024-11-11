@@ -1,6 +1,8 @@
-import { Controller, Post,Body } from '@nestjs/common';
+import { Controller, Post,Body, Get, Param, Patch } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
 import { FriendRequestDto } from './dto/friend-request.dto';
+import { FriendRequest } from './schema/firend-request.schema';
+import { MessagesDto } from 'src/message/dto/message.dto';
 
 @Controller('fr')
 export class FriendRequestController {
@@ -18,5 +20,18 @@ export class FriendRequestController {
     }catch(err){
         throw err
     }
+    }
+
+    @Patch('accept/:id')
+    async acceptRequest(
+        @Param('id') requestId: string,
+        @Body() friendRequestDto: FriendRequestDto
+    ): Promise<FriendRequest> {
+        try {
+            const acceptedRequest = await this.friendRequestService.acceptRequest(requestId, friendRequestDto);
+            return acceptedRequest;
+        } catch (err) {
+            throw err;
+        }
     }
 }

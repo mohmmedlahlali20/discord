@@ -5,6 +5,9 @@ import { Model } from 'mongoose';
 import { Conversation } from 'src/conversation/schema/conversation.schema';
 import { Message } from 'src/message/schema/message.schema';
 import { User } from 'src/user/schema/user.schema';
+import { MessagesDto } from 'src/message/dto/message.dto';
+import { FriendRequestDto } from './dto/friend-request.dto';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class FriendRequestService {
@@ -12,7 +15,8 @@ export class FriendRequestService {
         @InjectModel(FriendRequest.name) private friendRequestModel: Model<FriendRequest>,
         @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Conversation.name) private conversationModel: Model<Conversation>,
-        @InjectModel(Message.name) private messageModel: Model<Message>
+        @InjectModel(Message.name) private messageModel: Model<Message>,
+        private notificationsService: NotificationService
     ){}
 
 
@@ -27,8 +31,7 @@ export class FriendRequestService {
 
         const existingFriendRequest = ({
             sender,
-            reciever,
-            status: 'Pending'
+            reciever
         })
 
         if(!existingFriendRequest){
@@ -37,27 +40,44 @@ export class FriendRequestService {
 
         const friendRequest = new this.friendRequestModel({
             sender,
-            reciever,
-            status: 'Pending'
+            reciever
         })
 
        await friendRequest.save()
 
-       const conversation = new this.conversationModel({
-        participants: [FriendRequestDto],
-        type: 'private', 
-    });
-
-    await conversation.save();
-
-    
-    const message = new this.messageModel({
-        conversation: conversation._id,
-        sender: senderId,
-        text: 'Hello, I would like to be friends!',
-    });
-
-    await conversation.save();
+       
         return friendRequest;
     }
+
+    async acceptRequest(requestId: string,  friendRequestDto: FriendRequestDto ): Promise<FriendRequest> {
+     
+        
+        const updatedRequest = await this.friendRequestModel.findByIdAndUpdate(
+            requestId,
+            { status: 'Accepted' },
+            { new: true } 
+        );
+
+        const conversation = new this.conversationModel({
+            participants: [friendRequestDto.sender, friendRequestDto.receiver],
+            type: 'private', 
+        });
+    
+        await conversation.save();
+        const populatedConversation = await this.conversationModel
+        .findById(conversation._id)
+        .populate('participants')
+        .exec();
+        
+        this.notificationsService.sendNotification({
+            type: 'FRIEND_REQUEST_ACCEPTED',
+            message: `Your friend request has been accepted!`,
+            senderId: friendRequestDto.sender,
+            receiverId: friendRequestDto.receiver,
+          });
+          
+        await updatedRequest.save();
+        return updatedRequest
+        
+      }
 }
