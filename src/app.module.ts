@@ -9,6 +9,7 @@ import { ConversationModule } from './conversation/conversation.module';
 import { MessageModule } from './message/message.module';
 import { NotificationModule } from './notification/notification.module';
 import { TemporaryRoomModule } from './temporary-room/temporary-room.module';
+import { RatingModule } from './rating/rating.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { WebRtcModule } from './RTC/webrtc.module';
@@ -28,6 +29,7 @@ import { WebRtcModule } from './RTC/webrtc.module';
     MessageModule,
     NotificationModule,
     TemporaryRoomModule,
+    RatingModule,
     WebRtcModule,
   ],
   controllers: [AppController],
