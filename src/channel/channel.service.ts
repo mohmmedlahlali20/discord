@@ -234,6 +234,24 @@ export class ChannelService {
     }
   }
 
+  async GetAllDemand(channelId: string) {
+    try {
+      const channel = await this.channelModel.findById(channelId);
+
+      if (!channel) {
+        return { message: "Channel not found" };
+      }
+
+      return {
+        message: "Demand for integration successfully fetched",
+        demands: channel.demandsForIntegration,
+      };
+    } catch (error) {
+      throw new Error("Error fetching demand for integration: " + error.message);
+    }
+  }
+
+
 
 
 

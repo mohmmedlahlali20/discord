@@ -109,4 +109,9 @@ export class ChannelController {
     return this.channelService.AcceptDemand(userId);
   }
 
+  @Get(':channelId/AllDemand')
+  async getAllDemand(@Param('channelId') channelId: string) {
+    return this.channelService.GetAllDemand(channelId);
+  }
+
 }
