@@ -1,16 +1,23 @@
-import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
-import { Types } from "mongoose";
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
-export class MessagesDto{
-    @IsNotEmpty()
-    @IsMongoId()
-    sender: Types.ObjectId
+export class MessagesDto {
+  @IsNotEmpty()
+  @IsMongoId()
+  senderId: Types.ObjectId;
 
-    @IsNotEmpty()
-    @IsString()
-    text: string;
+  @IsNotEmpty()
+  @IsMongoId()
+  receiverId: Types.ObjectId;
 
-    @IsNotEmpty()
-    @IsMongoId()
-    conversation: Types.ObjectId
+  @IsNotEmpty()
+  @IsString()
+  text: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  conversationId: Types.ObjectId;
+
+//   @IsMongoId()  
+//   channelId: Types.ObjectId;
 }
