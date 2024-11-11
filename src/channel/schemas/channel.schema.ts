@@ -12,6 +12,9 @@ export class Channel {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] })
   members: mongoose.Schema.Types.ObjectId[];
 
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] })
+  demandsForIntegration: mongoose.Schema.Types.ObjectId[];
+
   @Prop({
     required: true,
     enum: ["public", "private"],
