@@ -104,5 +104,9 @@ export class ChannelController {
     return this.channelService.sendDemandForIntegration(userId, channelId);
   }
 
+  @Post(':channelId/acceptDemand')
+  async acceptDemand(@Body('userId') userId: string) {
+    return this.channelService.AcceptDemand(userId);
+  }
 
 }
