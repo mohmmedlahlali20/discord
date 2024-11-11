@@ -7,6 +7,9 @@ export class Conversation extends Document {
   @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], required: true })
   participants: Types.ObjectId[];
 
+  // @Prop({ type: Types.ObjectId, ref: 'Message' })
+  // latestMessage: Types.ObjectId;
+
   @Prop({ default: 'private' })
   type: string;
 }

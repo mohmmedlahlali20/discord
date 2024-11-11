@@ -7,6 +7,7 @@ import { Message } from 'src/message/schema/message.schema';
 import { User } from 'src/user/schema/user.schema';
 import { MessagesDto } from 'src/message/dto/message.dto';
 import { FriendRequestDto } from './dto/friend-request.dto';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class FriendRequestService {
@@ -14,7 +15,8 @@ export class FriendRequestService {
         @InjectModel(FriendRequest.name) private friendRequestModel: Model<FriendRequest>,
         @InjectModel(User.name) private userModel: Model<User>,
         @InjectModel(Conversation.name) private conversationModel: Model<Conversation>,
-        @InjectModel(Message.name) private messageModel: Model<Message>
+        @InjectModel(Message.name) private messageModel: Model<Message>,
+        private notificationsService: NotificationService
     ){}
 
 
@@ -66,7 +68,14 @@ export class FriendRequestService {
         .findById(conversation._id)
         .populate('participants')
         .exec();
-    
+        
+        this.notificationsService.sendNotification({
+            type: 'FRIEND_REQUEST_ACCEPTED',
+            message: `Your friend request has been accepted!`,
+            senderId: friendRequestDto.sender,
+            receiverId: friendRequestDto.receiver,
+          });
+          
         await updatedRequest.save();
         return updatedRequest
         
