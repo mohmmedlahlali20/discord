@@ -95,4 +95,18 @@ export class ChannelController {
   async getChannelByUserId(@Param('userId') userId: string) {
     return this.channelService.findChannelByUserId(userId);
   }
+
+  @Post(':channelId/demandForIntegration')
+  async sendDemandForIntegration(
+    @Body('userId') userId: string,
+    @Param('channelId') channelId: string,
+  ) {
+    return this.channelService.sendDemandForIntegration(userId, channelId);
+  }
+
+  @Post(':channelId/acceptDemand')
+  async acceptDemand(@Body('userId') userId: string) {
+    return this.channelService.AcceptDemand(userId);
+  }
+
 }

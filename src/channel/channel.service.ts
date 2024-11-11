@@ -181,6 +181,60 @@ export class ChannelService {
       throw new Error("Error getting channels: " + error.message);
     }
   }
+  async sendDemandForIntegration(userId: string, channelId: string) {
+    try {
+      const channel = await this.channelModel.findById(channelId);
+
+      if (!channel) {
+        return { message: "Channel not found" };
+      }
+
+      if (channel.type !== 'public') {
+        return { message: "You can only send demands for integration to public channels" };
+      }
+
+      const updatedChannel = await this.channelModel.findByIdAndUpdate(
+        channelId,
+        { $push: { demandsForIntegration: userId } },
+        { new: true }
+      );
+
+      return {
+        message: "Demand for integration successfully added to the channel",
+        channel: updatedChannel,
+      };
+    } catch (error) {
+      throw new Error("Error adding demand for integration to channel: " + error.message);
+    }
+  }
+
+
+
+  async AcceptDemand(userId: string) {
+    try {
+      const updatedChannel = await this.channelModel.findOneAndUpdate(
+        { demandsForIntegration: userId },
+        {
+          $pull: { demandsForIntegration: userId },
+          $push: { members: userId },
+        },
+        { new: true }
+      );
+
+      if (!updatedChannel) {
+        return { message: "Channel not found" };
+      }
+
+      return {
+        message: "Demand for integration successfully accepted and user added to the channel",
+        channel: updatedChannel,
+      };
+    } catch (error) {
+      throw new Error("Error accepting demand for integration: " + error.message);
+    }
+  }
+
+
 
 
 }
