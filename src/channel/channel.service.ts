@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { Cron, CronExpression } from "@nestjs/schedule"
 import { Channel, ChannelDocument } from "./schemas/channel.schema";
 import { CreateChannelDto } from "./dto/createChannel.dto";
 
@@ -11,7 +12,7 @@ export class ChannelService {
   ) {}
 
   async CreateChannel(createChannelDto: CreateChannelDto): Promise<Channel> {
-    const { Title, members, type, badWords, userId } = createChannelDto;
+    const { Title, members, type, badWords, userId, expiresAt } = createChannelDto;
 
     const newChannel = new this.channelModel({
       Title,
@@ -19,6 +20,7 @@ export class ChannelService {
       type,
       badWords,
       userId,
+      expiresAt,
     });
 
     try {
@@ -26,7 +28,7 @@ export class ChannelService {
     } catch (err) {
       console.error("Error creating channel:", err.message);
       throw new Error("Unable to create channel. Please try again.");
-    }
+    } 
   }
 
   async findAllChannel(): Promise<Channel[]> {
@@ -252,6 +254,21 @@ export class ChannelService {
   }
 
 
+  @Cron('* * * * * *')
+  async deleteExpiredChannels() {
+    const currentDate = new Date();
+    try {
+      const result = await this.channelModel.deleteMany({expiresAt: { $lte: currentDate }});
+      if (result.deletedCount > 0) {
+        console.log(`Deleted ${result.deletedCount} expired channel(s).`);
+      }
+    } catch (error) {
+      console.error("Error deleting expired channels:", error.message);
+    }
+   
+  }
+
+ 
 
 
 
