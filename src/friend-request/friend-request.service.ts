@@ -8,7 +8,6 @@ import { User } from 'src/user/schema/user.schema';
 import { MessagesDto } from 'src/message/dto/message.dto';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { NotificationService } from 'src/notification/notification.service';
-
 @Injectable()
 export class FriendRequestService {
     constructor(
@@ -18,7 +17,6 @@ export class FriendRequestService {
         @InjectModel(Message.name) private messageModel: Model<Message>,
         private notificationsService: NotificationService
     ){}
-
 
     async sendFriendRequest(FriendRequestDto): Promise<FriendRequest>{
         const { senderId, receiverId } = FriendRequestDto;
@@ -44,14 +42,11 @@ export class FriendRequestService {
         })
 
        await friendRequest.save()
-
-       
         return friendRequest;
-    }
 
+    }
     async acceptRequest(requestId: string,  friendRequestDto: FriendRequestDto ): Promise<FriendRequest> {
-     
-        
+
         const updatedRequest = await this.friendRequestModel.findByIdAndUpdate(
             requestId,
             { status: 'Accepted' },
@@ -62,22 +57,32 @@ export class FriendRequestService {
             participants: [friendRequestDto.sender, friendRequestDto.receiver],
             type: 'private', 
         });
-    
+
         await conversation.save();
         const populatedConversation = await this.conversationModel
         .findById(conversation._id)
         .populate('participants')
         .exec();
-        
+
         this.notificationsService.sendNotification({
             type: 'FRIEND_REQUEST_ACCEPTED',
             message: `Your friend request has been accepted!`,
             senderId: friendRequestDto.sender,
             receiverId: friendRequestDto.receiver,
           });
-          
+
         await updatedRequest.save();
         return updatedRequest
-        
+      }
+
+      async denyConversation (requestId: string, friendRequestDto: FriendRequestDto): Promise<FriendRequest>{
+
+        const updateFriendRequest = await this.friendRequestModel.findByIdAndUpdate(
+            requestId,
+           { status: 'Denied' },
+           { new: true }
+        ) 
+        await updateFriendRequest.save()
+        return updateFriendRequest
       }
 }

@@ -1,8 +1,10 @@
-import { Controller, Post,Body, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Post,Body, Delete, Param, Patch } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { FriendRequest } from './schema/firend-request.schema';
 import { MessagesDto } from 'src/message/dto/message.dto';
+import { error } from 'console';
+
 
 @Controller('fr')
 export class FriendRequestController {
@@ -32,6 +34,20 @@ export class FriendRequestController {
             return acceptedRequest;
         } catch (err) {
             throw err;
+        }
+    }
+
+
+    @Delete('denied/:id')
+    async denyRequest(
+        @Param('id') requestId: string,
+        @Body() friendRequestDto: FriendRequestDto
+    ): Promise<FriendRequest>{
+        try{
+            const denyRequest = await this.friendRequestService.deleteRequest(requestId, friendRequestDto)
+            return denyRequest
+        }catch(error){
+            throw error
         }
     }
 }
