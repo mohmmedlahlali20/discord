@@ -26,7 +26,7 @@ export class ChannelController {
     }
   }
 
-  @Get()
+  @Get('getAll')
   async findAll(): Promise<Channel[]> {
     return this.channelService.findAllChannel();
   }
