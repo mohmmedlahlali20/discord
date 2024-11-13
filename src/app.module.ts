@@ -8,11 +8,11 @@ import { ChannelModule } from './channel/channel.module';
 import { ConversationModule } from './conversation/conversation.module';
 import { MessageModule } from './message/message.module';
 import { NotificationModule } from './notification/notification.module';
-import { TemporaryRoomModule } from './temporary-room/temporary-room.module';
 import { RatingModule } from './rating/rating.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { WebRtcModule } from './RTC/webrtc.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -21,6 +21,7 @@ import { WebRtcModule } from './RTC/webrtc.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
+    ScheduleModule.forRoot(),
     UserModule,
     AuthModule,
     FriendRequestModule,
@@ -28,7 +29,6 @@ import { WebRtcModule } from './RTC/webrtc.module';
     ConversationModule,
     MessageModule,
     NotificationModule,
-    TemporaryRoomModule,
     RatingModule,
     WebRtcModule,
   ],

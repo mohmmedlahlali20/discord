@@ -27,4 +27,6 @@ export class CreateChannelDto {
   @IsNotEmpty()
   @IsString()
   userId: string;
+  
+  expiresAt: Date;
 }

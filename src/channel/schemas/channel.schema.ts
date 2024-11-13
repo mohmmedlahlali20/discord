@@ -4,7 +4,7 @@ import { Document } from "mongoose";
 
 export type ChannelDocument = Channel & Document;
 
-@Schema()
+@Schema({ timestamps: true})
 export class Channel {
   @Prop({ required: true })
   Title: string;
@@ -27,6 +27,10 @@ export class Channel {
 
   @Prop({ type: [String], required: true })
   badWords: string[];
+  
+
+  @Prop({ type: Date, required: false })
+  expiresAt: Date;
 }
 
 export const ChannelSchema = SchemaFactory.createForClass(Channel);
