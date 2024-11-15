@@ -8,6 +8,10 @@ import { User } from 'src/user/schema/user.schema';
 import { MessagesDto } from 'src/message/dto/message.dto';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { NotificationService } from 'src/notification/notification.service';
+
+import { Status as FriendRequestStatus } from "./schema/firend-request.schema";
+
+
 @Injectable()
 export class FriendRequestService {
     constructor(
@@ -21,15 +25,15 @@ export class FriendRequestService {
     async sendFriendRequest(FriendRequestDto): Promise<FriendRequest>{
         const { senderId, receiverId } = FriendRequestDto;
         const sender= await this.userModel.findById(senderId)
-        const reciever= await this.userModel.findById(receiverId)
+        const receiver= await this.userModel.findById(receiverId)
 
-        if(!sender || sender == reciever){
+        if(!sender || sender == receiver){
             throw new Error('Both sender and receiver must exist');
         }
 
         const existingFriendRequest = ({
             sender,
-            reciever
+            receiver
         })
 
         if(!existingFriendRequest){
@@ -38,7 +42,7 @@ export class FriendRequestService {
 
         const friendRequest = new this.friendRequestModel({
             sender,
-            reciever
+            receiver
         })
 
        await friendRequest.save()
@@ -52,13 +56,45 @@ export class FriendRequestService {
             { status: 'Accepted' },
             { new: true } 
         );
+     
+        
+    
+        const friendRequest = await this.friendRequestModel.findById(requestId);
+        if (!friendRequest) {
+            throw new Error('Friend request not found');
+        }
+    
+        const senderId = friendRequest.sender;
+        const receiverId = friendRequest.receiver;
+    
+    
 
+        const sender = await this.userModel.findById(senderId);
+        const receiver = await this.userModel.findById(receiverId);
+
+        if (!sender || !receiver) {
+            throw new Error('Both users must exist to accept the friend request');
+        }
+
+        friendRequest.status = FriendRequestStatus.Accepted;
+        await friendRequest.save();
+
+        await this.userModel.findByIdAndUpdate(senderId, {
+            $addToSet: { friends: receiverId }
+        });
+        await this.userModel.findByIdAndUpdate(receiverId, {
+            $addToSet: { friends: senderId }
+        });
+    
+
+       
         const conversation = new this.conversationModel({
             participants: [friendRequestDto.sender, friendRequestDto.receiver],
             type: 'private', 
         });
 
         await conversation.save();
+
         const populatedConversation = await this.conversationModel
         .findById(conversation._id)
         .populate('participants')
@@ -67,8 +103,8 @@ export class FriendRequestService {
         this.notificationsService.sendNotification({
             type: 'FRIEND_REQUEST_ACCEPTED',
             message: `Your friend request has been accepted!`,
-            senderId: friendRequestDto.sender,
-            receiverId: friendRequestDto.receiver,
+            senderId: senderId,
+            receiverId: receiverId,
           });
 
         await updatedRequest.save();
@@ -84,6 +120,9 @@ export class FriendRequestService {
         ) 
         await updateFriendRequest.save()
         return updateFriendRequest
+          
+        return friendRequest
+        
       }
 }
 

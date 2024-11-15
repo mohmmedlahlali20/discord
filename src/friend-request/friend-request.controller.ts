@@ -12,7 +12,7 @@ export class FriendRequestController {
         private friendRequestService: FriendRequestService
     ){}
 
-    @Post()
+    @Post('send')
     async friendRequest(
         @Body() friendRequestDto: FriendRequestDto, 
   ) {
