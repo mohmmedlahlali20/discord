@@ -5,12 +5,13 @@ import { User } from './schema/user.schema';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-    @Get('/users')
+  @Get('/users')
   async getAllUsers(): Promise<User[]> {
     return this.userService.GetAllUsers();
   }
+
 
   @Get('getAll')
   async getAllFriends(): Promise<User[]> {
