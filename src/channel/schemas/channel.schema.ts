@@ -31,6 +31,7 @@ export class Channel {
 
   @Prop({ type: Date, required: false })
   expiresAt: Date;
+  
 }
 
 export const ChannelSchema = SchemaFactory.createForClass(Channel);

@@ -7,8 +7,13 @@ import { User } from './schema/user.schema';
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Get('getAll')
-    async getAllFriends(): Promise<User[]> {
-        return this.userService.getAllFriends();
-    }
+    @Get('/users')
+  async getAllUsers(): Promise<User[]> {
+    return this.userService.GetAllUsers();
+  }
+
+  @Get('getAll')
+  async getAllFriends(): Promise<User[]> {
+      return this.userService.getAllFriends();
+  }
 }
