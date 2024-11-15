@@ -39,7 +39,9 @@ export class MessageService {
 
     return this.messageModel
       .find({ channel: channelId })
-      .populate('sender' , 'channel')
+      .populate('sender', 'name email')
+      .populate('channel', 'Title type')
       .exec();
   }
+
 }
