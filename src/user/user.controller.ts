@@ -13,3 +13,8 @@ export class UserController {
   }
 
 
+  @Get('getAll')
+  async getAllFriends(): Promise<User[]> {
+      return this.userService.getAllFriends();
+  }
+}
