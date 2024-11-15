@@ -1,17 +1,17 @@
-import { IsNotEmpty, IsString } from "class-validator";
+    import { IsNotEmpty, IsString } from "class-validator";
 
-export class FriendRequestDto{
+    export class FriendRequestDto{
 
-    
-    @IsString()
-    sender: string;
+        
+        @IsString()
+        sender: string;
 
-    
-    @IsString()
-    receiver: string;
+        
+        @IsString()
+        receiver: string;
 
-    
-}
+        
+    }
 
 
 

@@ -1,26 +1,26 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Types } from "mongoose";
-import { User } from 'src/user/schema/user.schema';
+    import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+    import { Types } from "mongoose";
+    import { User } from 'src/user/schema/user.schema';
 
-export enum Status{
-    Pending= 'Pending',
-    Accepted= 'Accepted',
-    Denyed= 'Denyed'
-}
-@Schema({
-    timestamps: true
-})
-export class FriendRequest{
+    export enum Status{
+        Pending= 'Pending',
+        Accepted= 'Accepted',
+        Denyed= 'Denyed'
+    }
+    @Schema({
+        timestamps: true
+    })
+    export class FriendRequest{
 
-    @Prop({  type: Types.ObjectId, ref: 'User' })
-    sender: Types.ObjectId;   
+        @Prop({  type: Types.ObjectId, ref: 'User' })
+        sender: Types.ObjectId;   
 
-    @Prop({ type: Types.ObjectId, ref: 'User'})
-    reciever: Types.ObjectId;
+        @Prop({ type: Types.ObjectId, ref: 'User'})
+        receiver: Types.ObjectId;
 
-    @Prop({ default: 'Pending' })
-    status: Status;  
+        @Prop({ default: 'Pending' })
+        status: Status;  
 
-}
+    }
 
-export const FriendRequestSchema = SchemaFactory.createForClass(FriendRequest)
+    export const FriendRequestSchema = SchemaFactory.createForClass(FriendRequest)
