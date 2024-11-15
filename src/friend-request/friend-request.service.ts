@@ -16,7 +16,7 @@ export class FriendRequestService {
         @InjectModel(Conversation.name) private conversationModel: Model<Conversation>,
         @InjectModel(Message.name) private messageModel: Model<Message>,
         private notificationsService: NotificationService
-    ){}
+    ){} 
 
     async sendFriendRequest(FriendRequestDto): Promise<FriendRequest>{
         const { senderId, receiverId } = FriendRequestDto;
@@ -46,7 +46,7 @@ export class FriendRequestService {
 
     }
     async acceptRequest(requestId: string,  friendRequestDto: FriendRequestDto ): Promise<FriendRequest> {
-
+        // const frId = this.friendRequestModel.findById(friendRequestDto.)
         const updatedRequest = await this.friendRequestModel.findByIdAndUpdate(
             requestId,
             { status: 'Accepted' },
@@ -74,8 +74,8 @@ export class FriendRequestService {
         await updatedRequest.save();
         return updatedRequest
       }
-
-      async denyConversation (requestId: string, friendRequestDto: FriendRequestDto): Promise<FriendRequest>{
+      //Delete.....
+      async deleteRequest (requestId: string, friendRequestDto: FriendRequestDto): Promise<FriendRequest>{
 
         const updateFriendRequest = await this.friendRequestModel.findByIdAndUpdate(
             requestId,
@@ -86,3 +86,6 @@ export class FriendRequestService {
         return updateFriendRequest
       }
 }
+
+
+5
