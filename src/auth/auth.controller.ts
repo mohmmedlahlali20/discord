@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Get } from '@nestjs/common';
+import { Controller, Body, Post, Get, Session } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -16,9 +16,19 @@ export class AuthController {
 
     @Post('/login')
     login(
-        @Body()
-        loginDto: LoginDto
+        @Body() loginDto: LoginDto,
+        @Session() session: Record<string, any>,
+
     ){
-        return this.authService.Login(loginDto)
+        return this.authService.Login(loginDto, session)
+    }
+
+    @Post('/logout')
+    async logout(@Session() session: Record<string, any>): Promise<void> {
+        try{
+      await this.authService.logout(session);
+        }catch(err){
+            throw  err
+        }
     }
 }
