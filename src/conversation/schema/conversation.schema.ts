@@ -12,6 +12,9 @@ export class Conversation extends Document {
 
   @Prop({ default: 'private' })
   type: string;
+
+  @Prop()
+  lastMessage: string; 
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

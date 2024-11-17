@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schema/user.schema';
+import { UpdateStatusDto } from './dto/updatestatus.dto';
 
 
 @Controller('user')
@@ -16,5 +17,14 @@ export class UserController {
   @Get('getAll')
   async getAllFriends(): Promise<User[]> {
       return this.userService.getAllFriends();
+  }
+
+
+  @Patch('/:id/status')
+  async updateStatus(
+    @Param('id') userId: string,
+    @Body() updateStatusDto: UpdateStatusDto,
+  ): Promise<User> {
+    return this.userService.updateUserStatus(userId, updateStatusDto.status);
   }
 }
