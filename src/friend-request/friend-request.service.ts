@@ -121,7 +121,7 @@ export class FriendRequestService {
         await updateFriendRequest.save()
         return updateFriendRequest
           
-        return friendRequest
+        
         
       }
 }
