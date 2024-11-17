@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Message, MessageDocument } from './schema/message.schema';
-import { Channel, ChannelDocument } from 'src/channel/schemas/channel.schema';
+import { Channel, ChannelDocument } from '../channel/schemas/channel.schema';
 
 @Injectable()
 export class MessageService {
@@ -22,13 +22,13 @@ export class MessageService {
     }
 
     const newMessage = new this.messageModel({
-      sender: userId,
+      senderId: userId,
       text,
       channel: channelId,
       createdAt: new Date(),
     });
 
-    return newMessage.save();
+    return await newMessage.save();
   }
 
   async getMessageByChannelId(channelId: string): Promise<Message[]> {
@@ -37,11 +37,11 @@ export class MessageService {
       throw new NotFoundException(`Channel with ID ${channelId} not found`);
     }
 
+    // Fetch and populate messages
     return this.messageModel
       .find({ channel: channelId })
-      .populate('sender', 'name email')
+      .populate('senderId', 'name email')
       .populate('channel', 'Title type')
       .exec();
   }
-
 }

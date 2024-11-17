@@ -5,6 +5,8 @@ import { User } from 'src/user/schema/user.schema';
 import { RegisterDto } from 'src/auth/dto/register.dto';
 import * as bcrypt from 'bcryptjs'
 import { LoginDto } from './dto/login.dto';
+import session from 'express-session';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,7 @@ export class AuthService {
         return user;
     }
 
-    async Login(loginDto: LoginDto): Promise<User>{
+    async Login(loginDto: LoginDto, session: Record<string, any>): Promise<Omit<User, 'password'>>{
 
         const {email, password} = loginDto
         const user = await this.USerModel.findOne({email})
@@ -40,6 +42,14 @@ export class AuthService {
         if(!isPasswordMatched){
             throw new UnauthorizedException('Invalid email or password')
         }
+        session.userId  = user._id;
+        console.log(session);
+        
         return user
+    }
+
+
+    async logout(session: Record<string, any>): Promise<void>{
+        session.destroy
     }
 }
