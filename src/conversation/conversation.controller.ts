@@ -6,9 +6,9 @@ import { ConversationService } from './conversation.service';
 export class ConversationController {
 constructor(private conversationService: ConversationService){}
 
-    @Get('/')
     
-    async getAllConversations(@Param('id') userId1: string): Promise<Conversation[]>{
-        return this.conversationService.getConversationOfUser(userId1)
-    }
+  @Get('/user/:userId') 
+  async getUserConversations(@Param('userId') userId: string): Promise<Conversation[]> {
+    return this.conversationService.getConversationOfUser(userId);
+  }
 }

@@ -9,11 +9,15 @@ export class ConversationService {
         @InjectModel(Conversation.name) private conversation: Model<Conversation>
 ){}
 
-        async getConversationOfUser (userId1: string): Promise<Conversation[]>{
-                    return await this.conversation.find({
-                        participants:userId1
-                    }).exec();
-        }
+        async getConversationOfUser (userId: string): Promise<Conversation[]>{
+                    return await this.conversation
+      .find({
+        participants: userId, 
+      })
+      .populate('participants', 'name email') 
+      .exec();
+  }
+        
 
 }
     
