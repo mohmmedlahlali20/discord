@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './schema/user.schema';
 
@@ -12,9 +12,8 @@ export class UserController {
     return this.userService.GetAllUsers();
   }
 
-
-  @Get('getAll')
-  async getAllFriends(): Promise<User[]> {
-      return this.userService.getAllFriends();
+  @Get('getAll/:userId') 
+  async getAllFriends(@Param('userId') userId: string): Promise<User[]> { 
+      return this.userService.getAllFriends(userId);
   }
 }
